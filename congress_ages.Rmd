@@ -1,0 +1,31 @@
+---
+title: "Congressional Ages"
+author: "Sanjana Ramrajvel"
+date: "9/17/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(fivethirtyeight)
+library(ggthemes)
+```
+
+```{r}
+data("congress_age") 
+
+congress_age %>%
+  mutate(year = format(termstart, "%Y")) %>%
+  filter(party %in% c("D", "R")) %>%
+  group_by(year, party) %>%
+  summarize(avgAge = mean(age)) %>%
+  
+  ggplot(aes(x = as.numeric(year), y = avgAge, group = party, color = party)) +
+    geom_line() +
+    labs(title = "Average Age of Members of Congress", subtitle = "At start of term, 1947 - 2013") +
+    theme_fivethirtyeight() +
+    scale_color_fivethirtyeight() +
+    scale_x_continuous(breaks=seq(1950, 2010, 10))
+```
+
